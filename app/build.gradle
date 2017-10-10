@@ -21,6 +21,7 @@ def buildTime() {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSDKVersion
@@ -40,6 +41,10 @@ android {
         buildConfigField 'String', 'SHA', "\"${gitSha()}\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     buildTypes {
@@ -84,7 +89,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibsVersion"
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
     testCompile "junit:junit:$rootProject.ext.junitVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
 }
 
 // Keep an eye on DEX - adding libraries causes problems
