@@ -1,0 +1,47 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.1.51'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// Define build constants used in all sub-projects
+ext {
+    // Base Android settings
+    minSDKVersion = 26
+    compileSDKVersion = 26
+    targetSDKVersion = 26
+
+    // Target specific Android platform tools and libs
+    buildToolsVersion = '26.0.2'
+    supportLibsVersion = '26.0.0-alpha1'
+    constraintLayoutVersion = '1.0.2'
+
+    // Test frameworks
+    espressoVersion = '2.2.2'
+    junitVersion = '4.12'
+
+    // DEX/APK utilities
+    dexcountVersion = '0.8.1'
+    apksizeVersion = '0.4.0'
+}

@@ -1,0 +1,102 @@
+// Versioning
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def buildNumber = 0
+
+def gitSha() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
+}
+
+// If there are modified or unstaged files in project, return string that can be added to version
+def gitDirty() {
+    return 'git status --porcelain'.execute().text.trim().isEmpty() ? '' : '-UNCLEAN'
+}
+
+def buildTime() {
+    def df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    df.setTimeZone(TimeZone.getTimeZone("UTC"))
+    return df.format(new Date())
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.ext.compileSDKVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.matthewemes.things.kotlinthing"
+        minSdkVersion rootProject.ext.minSDKVersion
+        targetSdkVersion rootProject.ext.targetSDKVersion
+
+        // Generate version details from properties defined above
+        versionCode versionMajor * 100000 + versionMinor * 10000 + versionPatch * 1000 + buildNumber
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}${gitDirty()}"
+
+        // Add Git information to BuildConfig
+        buildConfigField 'String', 'BUILD_TIME', "\"${buildTime()}\""
+        buildConfigField 'String', 'SHA', "\"${gitSha()}\""
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        quiet false
+        textReport true
+        textOutput 'stdout'
+        warningsAsErrors true
+        // Don't care about these warnings as app will not be indexed
+	disable 'GoogleAppIndexingWarning'
+        // XXX: Do care about this, but current tools are broken and can't identify resources that are only used in kotlin
+	disable 'UnusedResources'
+    }
+
+    testOptions {
+        unitTests {
+            all {
+                testLogging {
+                    events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibsVersion"
+    compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlin_version"
+}
+
+// Keep an eye on DEX - adding libraries causes problems
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$rootProject.ext.dexcountVersion"
+        classpath "com.vanniktech:gradle-android-apk-size-plugin:$rootProject.ext.apksizeVersion"
+    }
+}
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.vanniktech.android.apk.size'
