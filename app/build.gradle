@@ -96,6 +96,9 @@ dependencies {
 
     // Use timber for logging
     compile "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
+    // Android Things support
+    provided "com.google.android.things:androidthings:$rootProject.ext.thingsVersion"
 }
 
 // Keep an eye on DEX - adding libraries causes problems

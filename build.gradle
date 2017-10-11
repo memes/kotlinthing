@@ -51,4 +51,7 @@ ext {
 
     // Timber for logging
     timberVersion = '4.5.1'
+
+    // Android Things version
+    thingsVersion = '0.5.1-devpreview'
 }
