@@ -22,6 +22,7 @@ def buildTime() {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSDKVersion
@@ -64,10 +65,8 @@ android {
         textReport true
         textOutput 'stdout'
         warningsAsErrors true
-        // Don't care about these warnings as app will not be indexed
-	disable 'GoogleAppIndexingWarning'
         // XXX: Do care about this, but current tools are broken and can't identify resources that are only used in kotlin
-	disable 'UnusedResources'
+	    disable 'UnusedResources'
     }
 
     testOptions {
@@ -90,6 +89,13 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
+
+    // Use Dagger2 for DI
+    compile "com.google.dagger:dagger:$rootProject.ext.dagger2Version"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
+
+    // Use timber for logging
+    compile "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
 }
 
 // Keep an eye on DEX - adding libraries causes problems

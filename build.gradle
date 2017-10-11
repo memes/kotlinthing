@@ -45,4 +45,10 @@ ext {
     // DEX/APK utilities
     dexcountVersion = '0.8.1'
     apksizeVersion = '0.4.0'
+
+    // Dagger2
+    dagger2Version = '2.12'
+
+    // Timber for logging
+    timberVersion = '4.5.1'
 }
