@@ -1,13 +1,14 @@
 package com.matthewemes.things.kotlinthing
 
-import android.app.Activity
+import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
 import timber.log.Timber
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         val GPIO_PIN_NAME = "BCM6"
@@ -19,8 +20,11 @@ class MainActivity : Activity() {
     private var blinker: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("onCreate: enter, savedInstanceState = %s", savedInstanceState)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        welcomeText.text = "Using Kotlin android extensions!"
+
         val service = PeripheralManagerService()
         try {
             gpio = service.openGpio(GPIO_PIN_NAME)
