@@ -35,8 +35,11 @@ ext {
 
     // Target specific Android platform tools and libs
     buildToolsVersion = '26.0.2'
+    supportLibsVersion = '26.0.0-alpha1'
+    constraintLayoutVersion = '1.0.2'
 
     // Test frameworks
+    espressoVersion = '2.2.2'
     junitVersion = '4.12'
 
     // DEX/APK utilities
