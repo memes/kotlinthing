@@ -1,15 +1,22 @@
 package com.matthewemes.things.kotlinthing
 
-import android.support.v7.app.AppCompatActivity
+import android.app.Activity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.things.pio.PeripheralManagerService
+import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.d("onCreate: enter, savedInstanceState = %s", savedInstanceState)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        welcomeText.text = "Using Kotlin android extensions!"
+        val gpios = PeripheralManagerService().gpioList
+        if (gpios.isEmpty()) {
+            Timber.i("Didn't find any GPIO pins")
+        } else {
+            Timber.i("Found GPIO pins: %s", gpios.joinToString())
+        }
+        Timber.d("onCreate: exit")
     }
 }
